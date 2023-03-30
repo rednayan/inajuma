@@ -7,7 +7,6 @@
 use core::panic::PanicInfo;
 use inajuma::println;
 
-
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     println!("Welcome to the inajuma os 1.0");
@@ -21,19 +20,18 @@ pub extern "C" fn _start() -> ! {
     test_main();
 
     println!("[did not crash]");
-    loop{}
+    loop {}
 }
 
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    println!("{}",info);
-    loop{}
+    println!("{}", info);
+    loop {}
 }
 
 #[cfg(test)]
 #[panic_handler]
-fn panic(info: &PanicInfo) ->! {
+fn panic(info: &PanicInfo) -> ! {
     inajuma::test_panic_handler(info)
 }
-
