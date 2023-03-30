@@ -1,6 +1,7 @@
 use core::panic;
 
 use crate::gdt;
+use crate::print;
 use crate::println;
 use lazy_static::lazy_static;
 use pic8259::ChainedPics;
@@ -39,6 +40,8 @@ lazy_static! {
                 .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX);
         }
 
+        idt[InterruptIndex::Timer.as_usize()].set_handler_fn(timer_interrupt_handler);
+
         idt
     };
 }
@@ -56,6 +59,10 @@ extern "x86-interrupt" fn double_fault_handler(
     _error_code: u64,
 ) -> ! {
     panic!("EXCEPTION: DOUBLE FAULT\n{:#?}", stack_frame);
+}
+
+extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFrame) {
+    print!(".");
 }
 
 #[test_case]
